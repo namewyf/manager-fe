@@ -1,4 +1,4 @@
-const env = import.meta.env.mode || 'prod';
+const env = import.meta.env.MODE || 'prod';
 const Envconfig = {
     dev: {
         baseApi: '/',
