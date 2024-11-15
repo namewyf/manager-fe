@@ -18,6 +18,7 @@ export default {
     clearItem(key) {
         let storage = this.getStorage()
         delete storage[key]//delete 是一个操作符，用于删除对象的属性
+        window.localStorage.setItem(config.namespace, JSON.stringify(storage));
     },
     clearAll() {
         window.localStorage.clear()
