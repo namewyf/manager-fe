@@ -8,5 +8,6 @@ const Envconfig = {
 export default {
     env,
     mock: true,
+    namespace: 'manager',
     ...Envconfig[env]
 }

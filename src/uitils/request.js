@@ -57,7 +57,7 @@ function request(options) {
 }
 
 ['get', 'post', 'put', 'delete', 'patch'].forEach((item) => {
-    request[item] = (url, data, options) => {
+    request[item] = (url, data, options) => {//options可以对请求的参数做一些额外的拓展，比如可以传mock:true,或者loading之类的东西
         return request({
             url,
             data,

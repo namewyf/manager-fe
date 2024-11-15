@@ -16,14 +16,17 @@ export default {
     }
   },
   mounted() {
-    this.$request({
-      method:'get',
-      url:'/login',
-      data:{
-        name:'jack'
-      }
-    }).then((res)=>{
-       console.log("res=",res);
+    // this.$request({
+    //   method:'get',
+    //   url:'/login',
+    //   data:{
+    //     name:'jack'
+    //   }
+    // }).then((res)=>{
+    //    console.log("res=",res);
+    // })
+    this.$request.get('/login',{name:'jack'}).then((res)=>{
+      console.log(res);
     })
   }
 }
