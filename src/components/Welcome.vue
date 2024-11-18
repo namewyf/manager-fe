@@ -1,9 +1,7 @@
 <template>
-  <div>
-    <h1>欢迎来到欢迎界面</h1>
-    <!-- <el-button>去登录</el-button> -->
+  <div class="welcome">
+    <h1>欢迎来到主界面</h1>
     <router-link to="/login">去登录</router-link>
-    <router-view></router-view>
   </div>
 </template>
 
@@ -19,4 +17,9 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.welcome {
+  background: #fff;
+  height: 100%;
+}
+</style>

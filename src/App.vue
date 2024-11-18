@@ -3,15 +3,14 @@
 </template>
 
 <script>
-  export default{
-    name:'app',
-    mounted(){
-      this.$storage.setItem('name','Tom')
-    }
-  }
+export default {
+  name: 'app'
+}
 </script>
 
 
-<style scoped>
-
+<style lang="scss">
+/* style样式要通过@import的方式进行引入 */
+@use "./assets/style/index.scss";
+@use "./assets/style/reset.css";
 </style>
