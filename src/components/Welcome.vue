@@ -19,7 +19,5 @@ export default {
 
 <style lang="scss" scoped>
 .welcome {
-  background: #fff;
-  height: 100%;
 }
 </style>
