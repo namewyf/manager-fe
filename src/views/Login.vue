@@ -20,14 +20,15 @@
 
 <script>
 import { User, Lock } from '@element-plus/icons-vue'
+import { markRaw } from 'vue';
 
 export default {
   name: 'login',
   components: {},
   data() {
     return {
-      User,
-      Lock,
+      User:markRaw(User),
+      Lock:markRaw(Lock),
       user:{
         userName:'',
         userPwd:''

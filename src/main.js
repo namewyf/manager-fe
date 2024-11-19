@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import router from './router';
 import App from './App.vue'
 import ElementPlus from 'element-plus'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import 'element-plus/dist/index.css'
 import store from './store';
 import request from './uitils/request';
@@ -18,3 +19,6 @@ app.config.globalProperties.$storage = storage
 app.config.globalProperties.$api = api
 // app.config.globalProperties.$store = store这样挂载也是可行的但是不推荐
 app.use(router).use(store).use(ElementPlus).mount('#app');
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component)
+  }
