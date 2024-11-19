@@ -1,16 +1,17 @@
 <template>
   <div class="login-wrapper">
     <div class="modal">
-      <el-form>
+      <!-- 表单中设置 ref 属性很重要，它让我们能够在 JavaScript 代码中方便地操作表单组件。 -->
+      <el-form :model="user" status-icon ref="userForm" :rules="rules">
         <div class="title">火星</div>
-        <el-form-item>
-          <el-input type="text" :prefix-icon="User" />
+        <el-form-item prop="userName">
+          <el-input type="text" :prefix-icon="User" v-model="user.userName"/>
+        </el-form-item>
+        <el-form-item prop="userPwd">
+          <el-input type="password" :prefix-icon="Lock" v-model="user.userPwd"/>
         </el-form-item>
         <el-form-item>
-          <el-input type="password" :prefix-icon="Lock" />
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" class="btn-login">登录</el-button>
+          <el-button type="primary" class="btn-login" @click="login">登录</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -26,28 +27,38 @@ export default {
   data() {
     return {
       User,
-      Lock
+      Lock,
+      user:{
+        userName:'',
+        userPwd:''
+      },
+      rules:{
+        userName: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        userPwd: [
+          { required: true, message: '请输入密码', trigger: 'blur' }
+        ]
+      }
     }
   },
   methods: {
+    login(){
+      this.$refs.userForm.validate((valid) => {
+        if(valid){
+          this.$api.login(this.user).then((res)=>{
+            this.$store.commit('saveUserInfo',res)
+            this.$router.push('/welcome')
+          })
+        }else{
+          return false
+        }
+      })
+    },
     gotHome() {
       this.$router.push('/welcome')
     }
   },
-  mounted() {
-    // this.$request({
-    //   method:'get',
-    //   url:'/login',
-    //   data:{
-    //     name:'jack'
-    //   }
-    // }).then((res)=>{
-    //    console.log("res=",res);
-    // })
-    this.$request.get('/login', { name: 'jack' }).then((res) => {
-      console.log(res);
-    })
-  }
 }
 </script>
 

@@ -26,7 +26,7 @@ service.interceptors.request.use((req) => {
 
 //响应拦截
 service.interceptors.response.use((res) => {
-    const [code, data, msg] = [res.status, res.data, res.statusText]
+    const { code, data, msg } = res.data
     if (code === 200) {
         return data
     } else if (code === 40001) {
@@ -47,6 +47,9 @@ function request(options) {
     options.method = options.method || 'get'
     if (options.method.toLowerCase() === 'get') {
         options.params = options.data
+    }
+    if(typeof options.mock !== 'undefined'){
+        config.mock = options.mock;//如果传过来的options里面有mock，就使用传过来的，如果没有，就使用全局的
     }
     if (config.env === 'prod') {
         service.defaults.baseURL = config.baseApi
