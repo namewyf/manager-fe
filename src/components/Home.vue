@@ -24,13 +24,27 @@
 
 <script>
 export default {
-  name: 'home',
+  name: 'Home',
   components: {},
   data() {
-    return {}
+    return {
+      userInfo:this.$store.state.userInfo,
+      noticeCount:0
+    }
   },
-  methods: {},
-  mounted() { }
+  methods: {
+    async getNoticeCount(){
+      try{
+        const count = await this.$api.getNoticeCount()
+        this.noticeCount = count
+      }catch(error){
+        console.error(error);
+      }
+    }
+  },
+  mounted() { 
+    this.getNoticeCount()
+  }
 }
 </script>
 
