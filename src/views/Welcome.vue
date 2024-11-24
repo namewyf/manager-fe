@@ -7,7 +7,7 @@
     </div>
     <div class="img">
     </div>
-  </div>title
+  </div>
 </template>
 
 <script>
@@ -29,26 +29,31 @@ export default {
   align-items: center;
   width: 100%;
   height: 100%;
-  .content{
+
+  .content {
     position: relative;
     bottom: 40px;
-    .sub-title{
+
+    .sub-title {
       font-size: 30px;
       line-height: 42px;
       color: #333;
     }
-    .title{
+
+    .title {
       font-size: 40px;
       line-height: 62px;
       color: #409eff;
     }
-    .desc{
+
+    .desc {
       text-align: right;
       font-size: 14px;
       color: #999;
     }
   }
-  .img{
+
+  .img {
     margin-left: 105px;
     background-image: url('../assets/images/welcome.png');
     width: 371px;
