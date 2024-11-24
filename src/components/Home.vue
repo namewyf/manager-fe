@@ -51,7 +51,7 @@
         </div>
 
         <div class="user-info">
-          <el-badge :is-dot="true" class="notice">
+          <el-badge :is-dot="noticeCount" class="notice">
             <el-icon>
               <Bell />
             </el-icon>
@@ -90,10 +90,6 @@ export default {
     return {
       userInfo: this.$store.state.userInfo,
       noticeCount: 0,
-      userInfo: {
-        userName: 'admin',
-        userEmail: 'admin@qq.com'
-      },
       isCollapse: false
     }
   },

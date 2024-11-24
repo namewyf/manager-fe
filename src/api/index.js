@@ -8,11 +8,11 @@ export default {
             data: params,
         })
     },
-    noticeCount(params){
+    getNoticeCount(params) {
         return request({
             url: '/leave/count',
             method: 'get',
-            data:{}
+            data: {}
         })
     }
 }
