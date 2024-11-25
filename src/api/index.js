@@ -14,5 +14,12 @@ export default {
             method: 'get',
             data: {}
         })
+    },
+    getMenuList() {
+        return request({
+            url: '/menu/list',
+            method: 'get',
+            data: {}
+        })
     }
 }
