@@ -1,14 +1,14 @@
-const env = import.meta.env.MODE || 'prod';
+const env = import.meta.env.MODE || 'production';
 const Envconfig = {
     dev: {
         baseApi: '/',
         mockApi: 'https://apifoxmock.com/m1/5357666-5029387-default'
     },
-    test:{
+    test: {
         baseApi: '/',
         mockApi: 'https://apifoxmock.com/m1/5357666-5029387-default'
     },
-    prod: {
+    production: {
         baseApi: 'https://apifoxmock.com/m1/5357666-5029387-default',
         mockApi: ''
     }

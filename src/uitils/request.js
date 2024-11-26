@@ -48,10 +48,10 @@ function request(options) {
     if (options.method.toLowerCase() === 'get') {
         options.params = options.data
     }
-    if(typeof options.mock !== 'undefined'){
+    if (typeof options.mock !== 'undefined') {
         config.mock = options.mock;//如果传过来的options里面有mock，就使用传过来的，如果没有，就使用全局的
     }
-    if (config.env === 'prod') {
+    if (config.env === 'production') {
         service.defaults.baseURL = config.baseApi//如果是生产环境，直接使用baseApi
     } else {
         service.defaults.baseURL = config.mock ? config.mockApi : config.baseApi

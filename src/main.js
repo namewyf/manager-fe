@@ -12,8 +12,9 @@ import api from './api';
 
 console.log("环境变量", import.meta.env);
 const app = createApp(App);
-console.log(config.mockApi);
-console.log(config.env);
+console.log("config", config);
+console.log("config.mockApi", config.mockApi);
+console.log("config.env", config.env);
 app.config.globalProperties.$request = request
 app.config.globalProperties.$storage = storage
 app.config.globalProperties.$api = api
