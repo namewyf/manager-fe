@@ -8,7 +8,7 @@
         <span>Manager</span>
       </div>
       <!-- 导航菜单 -->
-      <el-menu default-active="2" background-color="#001529" text-color="#fff" router :collapse="isCollapse"
+      <el-menu :default-active="activeMenu" background-color="#001529" text-color="#fff" router :collapse="isCollapse"
         class="nav-menu">
         <TreeMenu :userMenu="userMenu"></TreeMenu>
       </el-menu>
@@ -29,7 +29,7 @@
         </div>
 
         <div class="user-info">
-          <el-badge :is-dot="noticeCount" class="notice">
+          <el-badge :is-dot="noticeCount > 0 ? true : false" class="notice">
             <el-icon>
               <Bell />
             </el-icon>
@@ -61,7 +61,6 @@
 
 <script>
 import TreeMenu from './TreeMenu.vue';
-import TreeMenu from './TreeMenu.vue';
 export default {
   name: 'home',
   components: {
@@ -72,7 +71,8 @@ export default {
       userInfo: this.$store.state.userInfo,
       noticeCount: 0,
       userMenu: [],
-      isCollapse: false
+      isCollapse: false,
+      activeMenu: location.hash.slice(1)//location.hash可以获取到当前路由地址
     }
   },
   methods: {
