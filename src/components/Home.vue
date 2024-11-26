@@ -24,7 +24,7 @@
             </el-icon>
           </div>
           <div class="bread">
-            面包屑
+            <BreadCrumb></BreadCrumb>
           </div>
         </div>
 
@@ -60,11 +60,13 @@
 </template>
 
 <script>
+import BreadCrumb from './BreadCrumb.vue';
 import TreeMenu from './TreeMenu.vue';
 export default {
   name: 'home',
   components: {
-    TreeMenu
+    TreeMenu,
+    BreadCrumb
   },
   data() {
     return {
