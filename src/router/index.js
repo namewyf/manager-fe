@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from '@/components/Home.vue'
-
+import storage from '@/uitils/storage'
 
 const routes = [
     {
@@ -19,6 +19,14 @@ const routes = [
                     title: '欢迎页'
                 },
                 component: () => import('@/views/Welcome.vue')
+            },
+            {
+                name:'user',
+                path:'user',
+                mata:{
+                    title:'用户管理'
+                },
+                component:()=>import('@/views/User.vue')
             }
         ]
     },
@@ -37,5 +45,16 @@ const routes = [
 const router = createRouter({
     history: createWebHashHistory(),
     routes: routes
+})
+router.beforeEach(async (to, from) => {
+    if (
+      // 检查用户是否已登录
+      !storage.getItem('userInfo') &&
+      // ❗️ 避免无限重定向
+      to.name !== 'login'
+    ) {
+      // 将用户重定向到登录页面
+      return { name: 'login' }
+    }
 })
 export default router;
