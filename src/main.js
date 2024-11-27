@@ -19,6 +19,7 @@ app.config.globalProperties.$request = request
 app.config.globalProperties.$storage = storage
 app.config.globalProperties.$api = api
 // app.config.globalProperties.$store = store这样挂载也是可行的但是不推荐
+//设置elmentplus组件的大小
 app.use(router).use(store).use(ElementPlus, { size: 'small' }).mount('#app');
 // 全局注册图标组件
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
