@@ -44,34 +44,22 @@
 
 <script>
 //这里使用的是composition api
-import { onMounted, reactive, ref } from 'vue'
+import { getCurrentInstance,onMounted, reactive, ref } from 'vue'
 export default {
     name: 'user',
     setup() {
-        const user = reactive({})
-        const userList = ref([
-            {
-                "state": 1,
-                "role": "0",
-                "roleList": [
-                    "60180b07b1eaed6c45fbebdb",
-                    "60150cb764de99631b2c3cd3",
-                    "60180b59b1eaed6c45fbebdc"
-                ],
-                "deptId": [
-                    "60167059c9027b7d2c520a61",
-                    "60167345c6a4417f2d27506f"
-                ],
-                "userId": 1000002,
-                "userName": "admin",
-                "userEmail": "admin@imooc.com",
-                "createTime": "2021-01-17T13:32:06.381Z",
-                "lastLoginTime": "2021-01-17T13:32:06.381Z",
-                "__v": 0,
-                "job": "前端架构师",
-                "mobile": "17611020000"
-            }
-        ])
+        //vue3的this不指向组件实例，我们用proxy来代替this
+        //需要使用 getCurrentInstance() 来获取组件实例。
+        //中 proxy 属性是我们最常用的，它相当于 Vue 2 中的 this，可以用来访问组件的属性和方法。
+        const { proxy } = getCurrentInstance()
+        const user = reactive({
+            state:1
+        })
+        const userList = ref([])
+        const pager = reactive({
+            pageNum: 1,
+            pageSize: 10,
+        })
         const columns = reactive([
             {
                 label: '用户ID',
@@ -103,12 +91,23 @@ export default {
             }
         ])
         onMounted(() => {
-            console.log("...init");
+            getUserList()
         })
+        const getUserList = async () => {
+            try{
+                const {list,page} = await proxy.$api.getUserList(user)
+                userList.value = list
+                pager.total = page.total
+            } catch (error) {
+                console.log("error", error);
+            }
+        }
         return {
             user,
             userList,
-            columns
+            columns,
+            pager,
+            getUserList,
         }
     },
 }

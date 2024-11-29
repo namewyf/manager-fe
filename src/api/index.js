@@ -21,5 +21,12 @@ export default {
             method: 'get',
             data: {}
         })
+    },
+    getUserList() {
+        return request({
+            url: '/users/list',
+            method: 'get',
+            data: {}
+        })
     }
 }
