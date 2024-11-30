@@ -22,11 +22,11 @@ export default {
             data: {}
         })
     },
-    getUserList() {
+    getUserList(params) {
         return request({
             url: '/users/list',
             method: 'get',
-            data: {}
+            data: params
         })
     }
 }
