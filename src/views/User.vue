@@ -24,7 +24,7 @@
         </div>
         <div class="base-table">
             <div class="action">
-                <el-button type="primary">新增</el-button>
+                <el-button type="primary" @click="handleCreate">新增</el-button>
                 <el-button type="danger" @click="handlePatchDel">批量删除</el-button>
             </div>
             <el-table :data="userList" @selection-change="handleSelectionChange">
@@ -41,6 +41,50 @@
             </el-table>
             <el-pagination class="pagination" background layout="prev, pager, next" :total="pager.total" :page-size="pager.pageSize" :current-page="pager.pageNum" @current-change="handleCurrentChange"></el-pagination>
         </div>
+        <el-dialog title="用户新增" v-model="showModal">
+            <el-form ref="dialogForm" :model="userForm" label-width="100px" :rules="rules">
+                <el-form-item label="用户名" prop="userName">
+                    <el-input v-model="userForm.userName" placeholder="请输入用户名"/>
+                </el-form-item>
+                <el-form-item label="邮箱" prop="userEmail">
+                    <el-input v-model="userForm.userEmail" placeholder="请输入用户邮箱">
+                        <template #append>@imooc.com</template>
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="手机号" prop="mobile">
+                    <el-input v-model="userForm.mobile" placeholder="请输入手机号"/>
+                </el-form-item>
+                <el-form-item label="岗位" prop="job">
+                    <el-input v-model="userForm.job" placeholder="请输入岗位"/>
+                </el-form-item>
+                <el-form-item label="状态" prop="state">
+                    <el-select v-model="userForm.state">
+                        <el-option :value="1" label="在职"></el-option>
+                        <el-option :value="2" label="离职"></el-option>
+                        <el-option :value="3" label="试用期"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="系统角色" prop="roleList" placeholder="请选择用户系统角色">
+                    <el-select v-model="userForm.roleList">
+                        <el-option></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="部门" prop="deptId">
+                    <el-cascader
+                    v-model="userForm.deptId"
+                    placeholder="请选择所属部门"
+                    :options="options"
+                    :props="{checkStrictly: true,value:'_id',label:'deptName'}"
+                    clearable />
+                </el-form-item>
+            </el-form>
+            <template #footer>
+            <div class="dialog-footer">
+                <el-button>取消</el-button>
+                <el-button type="primary">确定</el-button>
+            </div>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
@@ -67,7 +111,53 @@ export default {
         })
         //初始化选中用户ID
         const checkedUserIds = ref([])
+        //单框显示对象
+        const showModal = ref(false)
+        //定义用户表单对象
+        const userForm = reactive({
+            userName: '',
+            userEmail: '',
+            mobile: '',
+            job: '',
+            state: 3,
+            roleList: [],
+            deptId: []
+        })
         //定义动态表格格式
+        const rules = reactive({
+            userName:[
+                {
+                    required: true,
+                    message: '用户名不能为空',
+                    trigger: 'blur'
+                }
+            ],
+            userEmail:[
+                {
+                    required:true,
+                    message:'邮箱不能为空',
+                    trigger:'blur'
+                }
+            ],
+            mobile:[
+                {
+                    required:true,
+                    message:'手机号不能为空',
+                    trigger:'blur'
+                },{
+                    pattern:/1\d{10}/,
+                    message:'请输入正确格式的手机号',
+                    trigger:'blur'
+                }
+            ],
+            deptId:[
+                {
+                    required:true,
+                    message:'部门不能为空',
+                    trigger:'blur'
+                }
+            ]
+        })
         const columns = reactive([
             {
                 label: '用户ID',
@@ -175,19 +265,27 @@ export default {
             })
             checkedUserIds.value = arr
         }
+        //用户新增
+        const handleCreate = () => {
+            showModal.value = true
+        }
         return {
             user,
-            handleCurrentChange,
+            showModal,
+            userForm,
+            rules,
             userList,
             columns,
             pager,
             checkedUserIds,
             getUserList,
+            handleCurrentChange,
             handleQuery,
             handleReset,
             handleDelete,
             handlePatchDel,
-            handleSelectionChange
+            handleSelectionChange,
+            handleCreate
         }
     },
 }
