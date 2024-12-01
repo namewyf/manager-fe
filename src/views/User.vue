@@ -25,16 +25,17 @@
         <div class="base-table">
             <div class="action">
                 <el-button type="primary">新增</el-button>
-                <el-button type="danger">批量删除</el-button>
+                <el-button type="danger" @click="handlePatchDel">批量删除</el-button>
             </div>
-            <el-table :data="userList">
+            <el-table :data="userList" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" />
                 <el-table-column v-for="item in columns" :key="item.prop" :prop="item.prop" :label="item.label"
-                    :width="item.width" />
+                    :width="item.width" :formatter="item.formatter" />
                 <el-table-column label="操作" width="130">
                     <template #default="scope">
+                        <!-- scope 是一个特殊的插槽属性（slot prop），它包含了当前行的数据信息 -->
                         <el-button @click="handleClick(scope.row)" size="small">编辑</el-button>
-                        <el-button type="danger" size="small">删除</el-button>
+                        <el-button type="danger" size="small" @click="handleDelete(scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -64,6 +65,8 @@ export default {
             pageNum: 1,
             pageSize: 10,
         })
+        //初始化选中用户ID
+        const checkedUserIds = ref([])
         //定义动态表格格式
         const columns = reactive([
             {
@@ -81,10 +84,25 @@ export default {
             {
                 label: '用户角色',
                 prop: 'role',
+                formatter(row,column,value){
+                    //这里是一个对象字典
+                    return {
+                        0:'管理员',
+                        1:'普通用户',
+                    }[value]
+                }
             },
             {
                 label: '用户状态',
                 prop: 'state',
+                formatter(row,column,value){
+                    //这里是一个对象字典
+                    return {
+                        1:'在职',
+                        2:'离职',
+                        3:'试用期'
+                    }[value]
+                }
             },
             {
                 label: '注册时间',
@@ -125,15 +143,51 @@ export default {
             pager.pageNum = current
             getUserList();
         }
+        //用户单个删除
+        const handleDelete = async (row) => {
+            await proxy.$api.userDel({
+                userIds: [row.userId]
+            })
+            proxy.$message.success('删除成功')
+            getUserList()
+        }
+        //批量删除
+        const handlePatchDel = async () => {
+            if(checkedUserIds.value.length === 0) {
+                proxy.$message.error('请选择要删除的用户')
+                return
+            }
+            const res = await proxy.$api.userDel({
+                userIds: checkedUserIds.value
+            })
+            if(res.nModified>0){
+                proxy.$message.success('删除成功')
+                getUserList()
+            }else{
+                proxy.$message.error('删除失败')
+            }
+        }
+        //表格多选
+        const handleSelectionChange=(list)=>{
+            let arr = []
+            list.map(item=>{
+                arr.push(item.userId)
+            })
+            checkedUserIds.value = arr
+        }
         return {
             user,
             handleCurrentChange,
             userList,
             columns,
             pager,
+            checkedUserIds,
             getUserList,
             handleQuery,
-            handleReset
+            handleReset,
+            handleDelete,
+            handlePatchDel,
+            handleSelectionChange
         }
     },
 }

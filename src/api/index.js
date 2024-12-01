@@ -28,5 +28,12 @@ export default {
             method: 'get',
             data: params
         })
+    },
+    userDel(params) {
+        return request({
+            url: '/users/delete',
+            method: 'get',
+            data: params
+        })
     }
 }
