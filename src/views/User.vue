@@ -18,7 +18,7 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="handleQuery">查询</el-button>
-                    <el-button @click="handleReset">重置</el-button>
+                    <el-button @click="handleReset('form')">重置</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -64,24 +64,26 @@
                         <el-option :value="3" label="试用期"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="系统角色" prop="roleList" placeholder="请选择用户系统角色">
-                    <el-select v-model="userForm.roleList">
-                        <el-option></el-option>
+                <el-form-item label="系统角色" prop="roleList">
+                    <el-select v-model="userForm.roleList" placeholder="请选择用户系统角色" multiple style="width: 100%;">
+                        <el-option v-for="role in roleList" :key="role._id" :label="role.roleName" :value="role._id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="部门" prop="deptId">
                     <el-cascader
                     v-model="userForm.deptId"
                     placeholder="请选择所属部门"
-                    :options="options"
+                    :options="deptList"
                     :props="{checkStrictly: true,value:'_id',label:'deptName'}"
+                    :show-all-levels="true"
+                    :style="{width: '100%'}"
                     clearable />
                 </el-form-item>
             </el-form>
             <template #footer>
             <div class="dialog-footer">
-                <el-button>取消</el-button>
-                <el-button type="primary">确定</el-button>
+                <el-button @click="handleClose">取消</el-button>
+                <el-button type="primary" @click="handleSubmit">确定</el-button>
             </div>
             </template>
         </el-dialog>
@@ -90,7 +92,7 @@
 
 <script>
 //这里使用的是composition api
-import { getCurrentInstance,onMounted, reactive, ref } from 'vue'
+import { getCurrentInstance,onMounted, reactive, ref,toRaw } from 'vue'
 export default {
     name: 'user',
     setup() {
@@ -123,6 +125,12 @@ export default {
             roleList: [],
             deptId: []
         })
+        //所有角色列表
+        const roleList = ref([])
+        //所有部门列表
+        const deptList = ref([])
+        //定义用户操作行为
+        const action = ref('add')
         //定义动态表格格式
         const rules = reactive({
             userName:[
@@ -206,6 +214,8 @@ export default {
         //初始化接口调用
         onMounted(() => {
             getUserList()
+            getDeptList()
+            getRoleList()
         })
         //获取用户列表
         const getUserList = async () => {
@@ -224,8 +234,8 @@ export default {
             getUserList()
         }
         //重置
-        const handleReset = () => {
-            proxy.$refs.form.resetFields()
+        const handleReset = (form) => {
+            proxy.$refs[form].resetFields()
             // resetFields() 通过 prop 来识别要重置哪些字段
         }
         //分页事件处理
@@ -269,6 +279,41 @@ export default {
         const handleCreate = () => {
             showModal.value = true
         }
+        const getDeptList = async () => {
+            let list = await proxy.$api.getDeptList()
+            console.log("deptList=",list);
+            deptList.value = list
+        }
+        const getRoleList = async () => {
+            let list = await proxy.$api.getRoleList()
+            console.log("roleList=",list);
+            roleList.value = list.list
+        }
+        //用户弹窗关闭
+        const handleClose = ()=>{
+            showModal.value = false
+            handleReset('dialogForm')
+        }
+        //用户弹窗确定
+        const handleSubmit = ()=>{
+            console.log("userForm=",userForm);
+            proxy.$refs.dialogForm.validate(async (valid)=>{
+                if(valid){
+                    let params = toRaw(userForm)
+                    //这里使用toRaw，将响应式对象转换为普通对象，这样我们对这个普通对象的修改就不会影响到userForm对象了
+                    params.userEmail += "@imooc.com"
+                    params.action = 'add'
+                    console.log("params=",params);
+                    let res = await proxy.$api.userSubmit(params)
+                    if(res){
+                        showModal.value = false
+                        proxy.$message.success('用户创建成功')
+                        handleReset('dialogForm')
+                        getUserList()
+                    }
+                }
+            })
+        }
         return {
             user,
             showModal,
@@ -285,7 +330,13 @@ export default {
             handleDelete,
             handlePatchDel,
             handleSelectionChange,
-            handleCreate
+            handleCreate,
+            getDeptList,
+            getRoleList,
+            roleList,
+            deptList,
+            handleClose,
+            handleSubmit
         }
     },
 }

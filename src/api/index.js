@@ -35,5 +35,26 @@ export default {
             method: 'get',
             data: params
         })
+    },
+    getRoleList() {
+        return request({
+            url: '/roles/list',
+            method: 'get',
+            data: {}
+        })
+    },
+    getDeptList() {
+        return request({
+            url: '/dept/list',
+            method: 'get',
+            data: {}
+        })
+    },
+    userSubmit(params) {
+        return request({
+            url: '/users/operate',
+            method: 'post',
+            data: params
+        })
     }
 }
