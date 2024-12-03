@@ -302,7 +302,7 @@ export default {
                     let params = toRaw(userForm)
                     //这里使用toRaw，将响应式对象转换为普通对象，这样我们对这个普通对象的修改就不会影响到userForm对象了
                     params.userEmail += "@imooc.com"
-                    params.action = 'add'
+                    params.action = action.value
                     console.log("params=",params);
                     let res = await proxy.$api.userSubmit(params)
                     if(res){
